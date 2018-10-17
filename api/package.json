@@ -2,13 +2,15 @@
   "name": "trend-visualizer",
   "version": "1.0.0",
   "description": "project to visualize trends for words used in books",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "license": "MIT",
   "dependencies": {
     "csvtojson": "^2.0.8",
+    "eslint": "^5.7.0",
+    "express": "^4.16.4",
     "google-trends-api": "^4.7.0"
   }
 }
