@@ -1,15 +1,21 @@
 import Vue from 'vue'
-import Router from 'vue-router'
-import LineChart from '@/components/LineChart'
+import VueRouter from 'vue-router'
+import TrendPage from '@/components/TrendPage'
+import TrendsPage from '@/components/TrendsPage'
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
-export default new Router({
+export default new VueRouter({
+  mode: "history",
   routes: [
     {
-      path: '/',
-      name: 'LineChart',
-      component: LineChart
+      path: '/trend',
+      name: 'TrendPage',
+      component: TrendPage
+    }, {
+      path: '/trends',
+      name: 'TrendsPage',
+      component: TrendsPage
     }
   ]
 })

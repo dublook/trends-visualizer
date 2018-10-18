@@ -1,10 +1,7 @@
 <template>
-  <div class='example'>
-    <apexcharts width='1000' height='400' type='line' :options='chartOptions' :series='series'></apexcharts>
-    <div>
-      <input id="hoge" type="text">
-      <button @click='updateChart'>Update!</button>
-    </div>
+  <div class='line-chart'>
+    <div class='chart-name'>{{ word }}</div>
+    <apexcharts width='1200' height='360' type='area' :options='chartOptions' :series='series'></apexcharts>
   </div>
 </template>
 
@@ -13,10 +10,11 @@ import VueApexCharts from "vue-apexcharts";
 import axios from "axios";
 
 export default {
-  name: "LineExample",
+  name: "LineChart",
   components: {
     apexcharts: VueApexCharts
   },
+  props: ["word"],
   data: function() {
     return {
       chartOptions: {
@@ -40,34 +38,47 @@ export default {
     };
   },
   methods: {
-    updateChart() {
-      const word = document.getElementById("hoge").value;
+    updateChart: function(word) {
+      if (!word || word == "") {
+        return;
+      }
       axios.get("http://localhost:3000/trend/" + word).then(res => {
         let timelineData = JSON.parse(res["data"])["default"]["timelineData"];
         let values = [];
         for (let i = 0; i < timelineData.length; i++) {
           const data = timelineData[i];
           const date = new Date(data["formattedAxisTime"]);
-          // somehow value comes in array
           values[i] = {
-              x:
-                date.getFullYear() +
-                "/" +
-                (date.getMonth() + 1) +
-                "/" +
-                date.getDate(),
-              y: data["value"][0]
-            };
+            x:
+              date.getFullYear() +
+              "/" +
+              (date.getMonth() + 1) +
+              "/" +
+              date.getDate(),
+            y: data["value"][0]
+          };
         }
         let series = [
           {
-            name: word,
+            name: this.word,
             data: values
           }
         ];
         this.series = series;
       });
     }
+  },
+  created() {
+    this.updateChart(this.word);
+    this.$watch('word', word => {
+      this.updateChart(word);
+    });
   }
 };
 </script>
+
+<style scoped>
+.chart-name {
+  font-size: 1.4rem;
+}
+</style>
