@@ -32,8 +32,9 @@ app.get("/trend/:word", (req, res) => {
   console.log("params are: ", params);
   googleTrends.interestOverTime(params)
     .then(function (results) {
-      const defaultResponse = results["default"];
-      res.json(results);
+      const responseObj = JSON.parse(results);
+      const defaultResponse = responseObj["default"];
+      res.json(defaultResponse);
     })
     .catch(function (err) {
       console.error('Oh no there was an error', err);
