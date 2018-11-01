@@ -1,7 +1,7 @@
-const googleTrends = require('google-trends-api');
 const csvtojson = require('csvtojson');
 const express = require("express");
 const app = express();
+const TrendGetter = require('./trend-getter.js');
 
 function main() {
   let csvFileName = "sample.csv";
@@ -22,19 +22,12 @@ app.use(function(req, res, next) {
 });
 
 app.get("/trend/:word", (req, res) => {
-  let startTime = new Date();
-  startTime.setFullYear(startTime.getFullYear() - 4);
   const word = req.params.word;
-  const params = {
-    keyword: word,
-    startTime: startTime
-  };
-  console.log("params are: ", params);
-  googleTrends.interestOverTime(params)
+  const years = 4;
+  const trendGetter = new TrendGetter('en');
+  trendGetter.interestOverYears([word], years)
     .then(function (results) {
-      const responseObj = JSON.parse(results);
-      const defaultResponse = responseObj["default"];
-      res.json(defaultResponse);
+      res.json(results);
     })
     .catch(function (err) {
       console.error('Oh no there was an error', err);
